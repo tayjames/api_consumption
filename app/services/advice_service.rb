@@ -5,30 +5,27 @@ require "pry"
 class AdviceService
 
   def random
-    conn = Faraday.new(url: "https://api.adviceslip.com") do |faraday|
-      faraday.adapter Faraday.default_adapter
-    end
-
-    response = conn.get("/advice")
-    json = JSON.parse(response.body, symbolize_names: true)
+    get_json("/advice")
   end
 
   def find(slip_id)
-    conn = Faraday.new(url: "https://api.adviceslip.com") do |faraday|
-      faraday.adapter Faraday.default_adapter
-    end
-
-    response = conn.get("/advice/#{slip_id}")
-    json = JSON.parse(response.body, symbolize_names: true)
+    get_json("/advice/#{slip_id}")
   end
 
   def search(query)
-    conn = Faraday.new(url: "https://api.adviceslip.com") do |faraday|
-      faraday.adapter Faraday.default_adapter
-    end
-
-    response = conn.get("/advice/search/#{query}")
-    json = JSON.parse(response.body, symbolize_names: true)
+    get_json("/advice/search/#{query}")
   end
 
+  private
+
+  def conn
+    Faraday.new(url: "https://api.adviceslip.com") do |faraday|
+      faraday.adapter Faraday.default_adapter
+    end
+  end
+
+  def get_json(url)
+    response = conn.get(url)
+    JSON.parse(response.body, symbolize_names: true)
+  end
 end
