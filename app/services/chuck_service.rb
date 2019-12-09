@@ -5,38 +5,31 @@ require "pry"
 class ChuckService
 
   def random
-    conn = Faraday.new(url: "https://api.chucknorris.io") do |f|
-      f.adapter Faraday.default_adapter
-    end
-
-    response = conn.get("/jokes/random")
-    json = JSON.parse(response.body, symbolize_names: true)
+    get_json("/jokes/random")
   end
 
   def random_in_category(category)
-    conn = Faraday.new(url: "https://api.chucknorris.io") do |f|
-      f.adapter Faraday.default_adapter
-    end
-
-    response = conn.get("/jokes/random?category=#{category}")
-    json = JSON.parse(response.body, symbolize_names: true)
+    get_json("/jokes/random?category=#{category}")
   end
 
   def categories
-    conn = Faraday.new(url: "https://api.chucknorris.io") do |f|
-      f.adapter Faraday.default_adapter
-    end
-
-    response = conn.get("/jokes/categories")
-    json = JSON.parse(response.body, symbolize_names: true)
+    get_json("/jokes/categories")
   end
 
   def search(query)
-    conn = Faraday.new("https://api.chucknorris.io") do |f|
+    get_json("/jokes/search?query=#{query}")
+  end
+
+  private
+
+  def conn
+    Faraday.new(url: "https://api.chucknorris.io") do |f|
       f.adapter Faraday.default_adapter
     end
+  end
 
-    response = conn.get("/jokes/search?query=#{query}")
-    json = JSON.parse(response.body, symbolize_names: true)
+  def get_json(url)
+    response = conn.get(url)
+    JSON.parse(response.body, symbolize_names: true)
   end
 end
