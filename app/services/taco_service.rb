@@ -5,56 +5,39 @@ require "pry"
 class TacoService
 
   def random_ingredients
-    conn = Faraday.new("http://taco-randomizer.herokuapp.com") do |f|
-      f.adapter Faraday.default_adapter
-    end
-
-    response = conn.get("/random/")
-    json = JSON.parse(response.body, symbolize_names: true)
+    get_json("/random/")
   end
 
   def random_taco
-    conn = Faraday.new("http://taco-randomizer.herokuapp.com") do |f|
-      f.adapter Faraday.default_adapter
-    end
-
-    response = conn.get("/random/?full-taco=true")
-    json = JSON.parse(response.body, symbolize_names: true)
+    get_json("/random/?full-taco=true")
   end
 
   def contributors
-    conn = Faraday.new("http://taco-randomizer.herokuapp.com") do |f|
-      f.adapter Faraday.default_adapter
-    end
-
-    response = conn.get("/contributions/")
-    json = JSON.parse(response.body, symbolize_names: true)
+    get_json("/contributions/")
   end
 
   def contributions(contributor)
-    conn = Faraday.new("http://taco-randomizer.herokuapp.com") do |f|
-      f.adapter Faraday.default_adapter
-    end
-
-    response = conn.get("/contributions/#{contributor}/")
-    json = JSON.parse(response.body, symbolize_names: true)
+    get_json("/contributions/#{contributor}/")
   end
 
   def ingredients_by_type(recipe_type)
-    conn = Faraday.new("http://taco-randomizer.herokuapp.com") do |f|
-      f.adapter Faraday.default_adapter
-    end
-
-    response = conn.get("/contributors/#{recipe_type}/")
-    json = JSON.parse(response.body, symbolize_names: true)
+    get_json("/contributors/#{recipe_type}/")
   end
 
   def contributors_by_ingredient(recipe_type, recipe_slug)
+    get_json("/contributors/#{recipe_type}/#{recipe_slug}/")
+  end
+
+  private
+
+  def conn
     conn = Faraday.new("http://taco-randomizer.herokuapp.com") do |f|
       f.adapter Faraday.default_adapter
     end
+  end
 
-    response = conn.get("/contributors/#{recipe_type}/#{recipe_slug}/")
-    json = JSON.parse(response.body, symbolize_names: true)
+  def get_json(url)
+    response = conn.get(url)
+    JSON.parse(response.body, symbolize_names: true)
   end
 end
