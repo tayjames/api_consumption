@@ -1,4 +1,6 @@
 require 'spec_helper'
+require './app/services/chuck_service'
+
 
 describe ChuckService do
   before(:each) do
@@ -10,20 +12,19 @@ describe ChuckService do
 
   it 'can find a random Chuck Norris joke' do
     joke = @c.random
-
-    expect(joke).to have_key("category")
-    expect(joke).to have_key("icon_url")
-    expect(joke).to have_key("id")
-    expect(joke).to have_key("value")
+    expect(joke).to have_key(:categories)
+    expect(joke).to have_key(:icon_url)
+    expect(joke).to have_key(:id)
+    expect(joke).to have_key(:value)
   end
 
   it 'can find a random joke in a category' do
     joke = @c.random_in_category('music')
 
-    expect(joke).to have_key("category")
-    expect(joke).to have_key("icon_url")
-    expect(joke).to have_key("id")
-    expect(joke).to have_key("value")
+    expect(joke).to have_key(:categories)
+    expect(joke).to have_key(:icon_url)
+    expect(joke).to have_key(:id)
+    expect(joke).to have_key(:value)
   end
 
   it 'can find a list of all categories' do
@@ -38,12 +39,12 @@ describe ChuckService do
 
   it 'can search for a joke' do
     search_results = @c.search("snakes")
-
-    expect(search_results).to have_key("total")
-    expect(search_results).to have_key("result")
-    expect(search_results["result"][0]).to have_key("category")
-    expect(search_results["result"][0]).to have_key("icon_url")
-    expect(search_results["result"][0]).to have_key("id")
-    expect(search_results["result"][0]).to have_key("value")
+    # binding.pry
+    expect(search_results).to have_key(:total)
+    expect(search_results).to have_key(:result)
+    expect(search_results[:result][0]).to have_key(:categories)
+    expect(search_results[:result][0]).to have_key(:icon_url)
+    expect(search_results[:result][0]).to have_key(:id)
+    expect(search_results[:result][0]).to have_key(:value)
   end
 end
