@@ -1,4 +1,5 @@
 require './spec/spec_helper'
+require './app/services/marvel_service'
 
 describe MarvelService do
   before(:each) do
@@ -12,21 +13,21 @@ describe MarvelService do
   it 'can get character info by name' do
     c = @m.character("hulk")
 
-    expect(c).to have_key("data")
-    expect(c["data"]["results"].first["name"]).to eq("Hulk")
-    expect(c["data"]["results"].first).to have_key("description")
-    expect(c["data"]["results"].first).to have_key("comics")
+    expect(c).to have_key(:data)
+    expect(c[:data][:results].first[:name]).to eq("Hulk")
+    expect(c[:data][:results].first).to have_key(:description)
+    expect(c[:data][:results].first).to have_key(:comics)
   end
 
   it 'can get a list of creators by last name' do
     c = @m.creators(last_name: "kirby")
 
-    expect(c["data"]["results"].first["firstName"]).to eq("Jack")
+    expect(c[:data][:results].first[:firstName]).to eq("Jack")
   end
 
   it 'can get a list of creators by first name' do
     c = @m.creators(first_name: "brian")
 
-    expect(c["data"]["results"][4]["lastName"]).to eq("Bendis")
+    expect(c[:data][:results][4][:lastName]).to eq("Bendis")
   end
 end
