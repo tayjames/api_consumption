@@ -5,23 +5,29 @@ require "pry"
 class DiscogsService
 
   def releases_from_artist(artist)
-    conn = Faraday.new("https://api.discogs.com") do |f|
-      f.adapter Faraday.default_adapter
-    end
-
-    response = conn.get("/database/search?q=#{artist}&key=#{ENV['DISCOGS_KEY']}&secret=#{ENV['DISCOGS_SECRET']}")
-    artist_id = JSON.parse(response.body, symbolize_names: true)[:results][0][:id]
-
-    release_response = conn.get("/artists/#{artist_id}/releases")
-    release_results = JSON.parse(release_response.body, symbolize_names: true)
+    artist_id = get_artist_id(artist)
+    get_json("/artists/#{artist_id}/releases")
   end
 
   def release_rating(release_id)
-    conn = Faraday.new("https://api.discogs.com") do |f|
+    get_json("/releases/#{release_id}")
+  end
+
+  private
+
+  def conn
+    Faraday.new("https://api.discogs.com") do |f|
       f.adapter Faraday.default_adapter
     end
+  end
 
-    response = conn.get("/releases/#{release_id}")
-    results = JSON.parse(response.body, symbolize_names: true)
+  def get_json(url)
+    response = conn.get(url)
+    JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def get_artist_id(artist)
+    response = get_json("/database/search?q=#{artist}&key=#{ENV['DISCOGS_KEY']}&secret=#{ENV['DISCOGS_SECRET']}")
+    response[:results][0][:id]
   end
 end
